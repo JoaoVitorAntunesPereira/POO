@@ -1,5 +1,10 @@
 # Compiled class file
 *.class
+*.classpath
+*.project
+*.replit
+*.xml
+*.nix
 
 # Log file
 *.log
