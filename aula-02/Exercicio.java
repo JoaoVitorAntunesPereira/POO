@@ -9,6 +9,6 @@ public class Exercicio{
     Integer fone3 = Integer.parseInt(fone2);
     System.out.println("CEP: " + cep);
     System.out.println("Fone: " + fone);
-    System.out.println("Telefone dividido por 2: " + fone3/2); 
+    System.out.println("telefone dividido por 2: " + fone3/2); 
   }
 }
