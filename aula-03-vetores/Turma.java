@@ -1,51 +1,50 @@
-public class Turma{
-  private int numTurma;
+public class Turma {
+  private int nroTurma;
   private String nomeCurso;
   private int anoIngresso;
-  private int qtdAlunos;
+  private int qtdeAlunos;
   private Aluno[] vetAlunos;
 
   public Turma(){
-    this.vetAlunos = new Aluno[40];
-  }
-  
-  public int getNumTurma(){
-    return this.numTurma;
+      this.vetAlunos = new Aluno[40];
   }
 
-  public void setNumTurma(int numTurma){
-    this.numTurma = numTurma;
+  public int getNroTurma(){
+      return this.nroTurma;
   }
 
-  public String getNomeCurso(){
-    return this.nomeCurso;
+  public void setNroTurma(int nt){
+      this.nroTurma = nt;
   }
 
-  public void setNomeCurso(String nomeCurso){
-    this.nomeCurso = nomeCurso;
+  public String getNomeCurso() {
+      return nomeCurso;
   }
 
-  public int getAnoIngresso(){
-    return this.anoIngresso;
+  public void setNomeCurso(String nomeCurso) {
+      this.nomeCurso = nomeCurso;
   }
 
-  public void setAnoIngresso(int anoIngresso){
-    this.anoIngresso = anoIngresso;
+  public int getAno() {
+      return anoIngresso;
   }
 
-  public int getQtdAlunos(){
-    return this.qtdAlunos;
+  public void setAno(int ano) {
+      this.anoIngresso = ano;
+  }    
+
+  public int getQtdeAlunos(){
+      return this.qtdeAlunos;
   }
 
   public Aluno getAluno(int pos){
-    return vetAlunos[pos];
+      return vetAlunos[pos];
   }
 
   public void setAluno(Aluno a){
-    if(qtdAlunos < 40){
-      this.vetAlunos[qtdAlunos] = a;
-      qtdAlunos++;
-    }
+      if(this.qtdeAlunos < 40){
+          this.vetAlunos[qtdeAlunos] = a;
+          qtdeAlunos++;
+      }
   }
-  
 }
