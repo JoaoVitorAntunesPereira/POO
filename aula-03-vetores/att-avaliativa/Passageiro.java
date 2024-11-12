@@ -2,38 +2,52 @@ public class Passageiro {
     private String nome;
     private String idPass;
     private String numAssento;
-    private String classe;
 
-    public String getNome(){
-        return this.nome;
+    // Tornar o vetor de assentos estático e compartilhado entre todos os passageiros
+    private static String[] assentos = new String[50];
+
+    // Inicializar o array de assentos uma única vez
+    static {
+        for (int i = 0; i < 25; i++) {
+            assentos[i] = (i + 1) + "A";
+        }
+        for (int i = 25; i < 40; i++) {
+            assentos[i] = (i - 24) + "B";
+        }
+        for (int i = 40; i < 50; i++) {
+            assentos[i] = (i - 39) + "C";
+        }
     }
 
-    public void setNome(String n){
-        this.nome = n;
+    public String getNome() {
+        return nome;
     }
 
-    public String getIdPass(){
-        return this.idPass;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public void setIdPass(String id){
-        this.idPass = id;
+    public String getIdPass() {
+        return idPass;
     }
 
-    public String getNumAssento(){
-        return this.numAssento;
+    public void setIdPass(String idPass) {
+        this.idPass = idPass;
     }
 
-    public void setNumAssento(String a){
-        this.numAssento = a;
+    public String getNumAssento() {
+        return numAssento;
     }
 
-    public String getClasse(){
-        return this.classe;
+    public void setNumAssento(String numAssento) {
+        this.numAssento = numAssento;
     }
 
-    public void setClasse(String c){
-        this.classe = c;
+    public static String[] getAssentos() {
+        return assentos;
+    }
+
+    public static void setAssento(int i, String a) {
+        assentos[i] = a;
     }
 }
-
