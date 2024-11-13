@@ -4,7 +4,7 @@ public class Companhia {
     private Voo[] vetVoos;
     private int qtdVoos;
 
-    public void Voo(){
+    public Companhia(){
         this.vetVoos = new Voo[10];
     }
 

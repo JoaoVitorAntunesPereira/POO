@@ -49,19 +49,19 @@ public class SistemaAereo {
     }
 
     private void cadastrarVoo() throws Exception {
-        Voo v = new Voo();
+        Voo voo = new Voo();
 
         System.out.println("CADASTRO DO VOO");
         System.out.println("Informe o ID do voo");
-        v.setIdVoo(this.reader.readLine());
+        voo.setIdVoo(this.reader.readLine());
         System.out.println("Informe o destino: ");
-        v.setDestino(this.reader.readLine());
+        voo.setDestino(this.reader.readLine());
         System.out.println("Informe a origem: ");
-        v.setOrigem(this.reader.readLine());
+        voo.setOrigem(this.reader.readLine());
         System.out.println("Informe a data do voo: ");
-        v.setData(this.reader.readLine());
+        voo.setData(this.reader.readLine());
         System.out.println("Informe a hora de saída do voo");
-        v.setHoraSaida(this.reader.readLine());
+        voo.setHoraSaida(this.reader.readLine());
         System.out.println("-----CADASTRO DE PASSAGEIROS-----");
 
         for (int i = 0; i < 50; i++) {
@@ -79,8 +79,7 @@ public class SistemaAereo {
 
             boolean confirm = false;
             while (!confirm) {
-                // Exibir os assentos disponíveis
-                String[] assentos = Passageiro.getAssentos();
+                String[] assentos = voo.getAssentos();
                 System.out.println("Assentos disponíveis:");
                 int cont = 0;
                 for (String assento : assentos) {
@@ -94,32 +93,51 @@ public class SistemaAereo {
                 System.out.println("\nEscolha um dos assentos:");
                 String ass = this.reader.readLine();
 
-                // Confirmar o assento
-                confirm = confirmarAssento(ass, passageiro);
+                confirm = confirmarAssento(ass, passageiro, voo);
                 if (confirm) {
                     System.out.println("Assento " + ass + " confirmado para " + nome);
+                    Character classe = ass.charAt(ass.length() - 1);
+                    Character.toUpperCase(classe);
+                    passageiro.setClasse(classe == ('A') ? "Econômica" : (classe == ('B') ? "Executiva" : "Primeira Classe"));
+                    passageiro.setNumAssento(ass);
                 } else {
                     System.out.println("Assento inválido ou já ocupado. Escolha outro.");
                 }
             }
+            voo.setPassageiro(passageiro);
         }
+        c1.setVoo(voo);
     }
 
     private void listarVoos() throws Exception {
-        // Implementação da listagem de voos
+        Voo voo = new Voo();
+        int i = 0;
+        while (voo != null){
+            voo = c1.getVoo(i);
+            if(voo == null){
+                break;
+            }
+            System.out.println("Voo " + (i+1));
+            System.out.println("ID: " + voo.getIdVoo() 
+                             + " Origem: " + voo.getOrigem()
+                             + " Destino: " + voo.getData()
+                             + " Data: " + voo.getData()
+                             + " Horário: " + voo.getHoraSaida());
+            i++;
+        }
     }
 
     private void consultarVoo() throws Exception {
-        // Implementação da consulta de voos
+
     }
 
-    private Boolean confirmarAssento(String ass, Passageiro p) {
-        String[] vetAss = Passageiro.getAssentos();
+    private Boolean confirmarAssento(String ass, Passageiro p, Voo v) {
+        String[] vetAss = v.getAssentos();
 
         for (int i = 0; i < vetAss.length; i++) {
             if (vetAss[i].equalsIgnoreCase(ass) && !vetAss[i].equals("XX")) {
                 p.setNumAssento(vetAss[i]);
-                Passageiro.setAssento(i, "XX"); // Marca o assento como ocupado
+                v.setAssento(i, "XX");
                 return true;
             }
         }
