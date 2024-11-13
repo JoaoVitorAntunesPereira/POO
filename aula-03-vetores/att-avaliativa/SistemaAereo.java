@@ -20,7 +20,7 @@ public class SistemaAereo {
 
     private void menu() throws Exception {
         String opcao = "0";
-
+        String id;
         while (!opcao.equals("4")) {
             System.out.println("----------------------------------------------");
             System.out.println("[1] Cadastrar novo voo: ");
@@ -28,7 +28,6 @@ public class SistemaAereo {
             System.out.println("[3] Consultar um voo: ");
             System.out.println("[4] Sair");
             opcao = this.reader.readLine();
-
             switch (opcao) {
                 case "1":
                     cadastrarVoo();
@@ -37,7 +36,9 @@ public class SistemaAereo {
                     listarVoos();
                     break;
                 case "3":
-                    consultarVoo();
+                    System.out.println("Informe o ID do voo: ");
+                    id = this.reader.readLine();
+                    consultarVoo(id);
                     break;
                 case "4":
                     break;
@@ -127,8 +128,30 @@ public class SistemaAereo {
         }
     }
 
-    private void consultarVoo() throws Exception {
+    private void consultarVoo(String id) throws Exception {
+        Voo voo = new Voo();
+        for(int i = 0; i < c1.getQtdVoos(); i++){
+            voo = c1.getVoo(i);
+            if(voo.getIdVoo().equalsIgnoreCase(id)){
+                System.out.println("Voo: " + voo.getIdVoo() );
+                System.out.println(" Origem: " + voo.getOrigem()
+                                 + " Destino: " + voo.getData()
+                                 + " Data: " + voo.getData()
+                                 + " Horário: " + voo.getHoraSaida());
 
+                System.out.println("----PASSAGEIROS----");
+                Passageiro p = new Passageiro();
+                for(int j = 0; j < voo.getQtdPass(); j++){
+                    p = voo.getPassageiro(j);
+                    System.out.println("Nome: " + p.getNome()
+                                     + " Identificação: " + p.getIdPass()
+                                     + " Classe: " + p.getClasse()
+                                     + " Assento: " + p.getNumAssento());
+                }
+            }else{
+                System.out.println("Voo não encontrado");
+            }
+        }
     }
 
     private Boolean confirmarAssento(String ass, Passageiro p, Voo v) {

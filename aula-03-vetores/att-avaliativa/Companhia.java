@@ -35,5 +35,9 @@ public class Companhia {
         this.sede = s;
     }
 
+
+    public int getQtdVoos(){
+        return this.qtdVoos;
+    }
     
 }
