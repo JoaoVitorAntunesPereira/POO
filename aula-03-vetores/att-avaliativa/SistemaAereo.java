@@ -148,6 +148,7 @@ public class SistemaAereo {
                                      + " Classe: " + p.getClasse()
                                      + " Assento: " + p.getNumAssento());
                 }
+                System.out.println("Assentos disponíveis: " + (50 - voo.getQtdPass()));
             }else{
                 System.out.println("Voo não encontrado");
             }
