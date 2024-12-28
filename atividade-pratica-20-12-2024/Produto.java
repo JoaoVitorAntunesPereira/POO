@@ -1,5 +1,5 @@
 public class Produto {
-    private int codigo;
+    private String codigo;
     private int estoque;
     private String nomeProduto;
     private float precoCusto;
@@ -7,10 +7,10 @@ public class Produto {
     private float margemLucro;
     private float custo;
 
-    public int getCodigo() {
+    public String getCodigo() {
         return codigo;
     }
-    public void setCodigo(int codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
     public int getEstoque() {
