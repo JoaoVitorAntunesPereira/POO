@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 class Transportadora implements ImportacaoArquivos{
@@ -10,18 +12,19 @@ class Transportadora implements ImportacaoArquivos{
     Encomenda[] encomendasNormais = new Encomenda[1000];
     EncomendaExpressa[] encomendasExpressas = new EncomendaExpressa[1000];
     
-    public void Transportadora(){
-
-    }
 
     public static void main(String[] args) throws Exception{
         Transportadora tr = new Transportadora();
         tr.reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Informe o nome do arquivo de configurações.");
-        String nomeArqConfig = tr.reader.readLine();
+        String[] arqConfig = null;
+        
 
-        String[] arqConfig = tr.carregarConfiguracoes(nomeArqConfig);
-
+        while(arqConfig == null){
+            System.out.println("Informe o nome do arquivo de configurações.");
+            String nomeArqConfig = tr.reader.readLine();
+            arqConfig = tr.carregarConfiguracoes(nomeArqConfig);
+            
+        }
         if(tr.selecionarColuna(arqConfig[1], 1).equals("EN")){
             tr.setPrecoEN(Float.valueOf(tr.selecionarColuna(arqConfig[1], 2)));
             tr.setPrecoEE(Float.valueOf(tr.selecionarColuna(arqConfig[2], 2)));
@@ -42,23 +45,30 @@ class Transportadora implements ImportacaoArquivos{
         tr.reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("1 - Importar arquivos de encomenda. ");
         System.out.println("2 - Exibir encomendas normais.");
-        System.err.println("3 - Exibir encomendas expressas.");
+        System.out.println("3 - Exibir encomendas expressas.");
+        System.out.println("4 - Sair");
         opt =  Integer.parseInt(tr.reader.readLine());
 
         switch (opt) {
             case 1:
                 System.out.println("Informe o nome do arquivo");
                 nomeArquivo = tr.reader.readLine();
-                importarDados(nomeArquivo);
+                
+                if(importarDados(nomeArquivo) == 1){
+                    System.out.println("Erro ao ler o arquivo!");
+                }
                 menu();
                 break;
             case 2:
                 listarEncomendasNormais(this.encomendasNormais);
                 menu();
+                break;
             case 3:
                 listarEncomendasExpressas(this.encomendasExpressas);
                 menu();
+                break;
             case 4:
+                System.out.println("Saiu"); 
                 break;
             default:
                 System.out.println("Informe uma opção válida!");;
@@ -67,27 +77,39 @@ class Transportadora implements ImportacaoArquivos{
     }
     
 
-    @Override
-    public String[] carregarConfiguracoes(String arqConfig) throws Exception{
+    public String[] carregarConfiguracoes(String arqConfig){
         String[] conteudo = new String[500];
-        BufferedReader reader = new BufferedReader(new FileReader(arqConfig));
-        String linha;
-        int i = 0;
-        do {
-            linha = reader.readLine();
-            if (linha != null) {
-                conteudo[i] = linha;
-                i++;
-            }
-        } while (linha != null);
-        reader.close();
-        return conteudo;
+
+        try {
+            reader = new BufferedReader(new FileReader(arqConfig));
+            String linha;
+            int i = 0;
+            do {
+                linha = reader.readLine();
+                if (linha != null) {
+                    conteudo[i] = linha;
+                    i++;
+                }
+            } while (linha != null);
+            reader.close();
+            return conteudo;
+            
+        } catch (IOException e) {
+            System.out.println("Arquivo não encontrado ou falha ao abrir.");
+            return null;
+        }
     }     
     
-    @Override
-    public String[] importarDados(String arqConfig) throws Exception{
+
+    public int importarDados(String arqConfig) throws Exception{
         String[] conteudo = new String[2];
-        BufferedReader reader = new BufferedReader(new FileReader(arqConfig));
+
+        try {
+            reader = new BufferedReader(new FileReader(arqConfig));    
+        } catch (FileNotFoundException e) {
+            return 1;
+        }
+        
         String linha;
         int i = encontrarPrimeiraPosicaoVazia(encomendasExpressas), j = encontrarPrimeiraPosicaoVazia(encomendasNormais);
         linha = reader.readLine();
@@ -102,9 +124,8 @@ class Transportadora implements ImportacaoArquivos{
                     ee.setPrazoEntrega(Integer.parseInt(selecionarColuna(linha, 3)));
                     ee.setPeso(Float.valueOf(selecionarColuna(linha, 4)));
                     ee.setFoneContato(selecionarColuna(linha, 0));
-                    ee.setValorFrete(ee.calcularFrete(ee.getPeso(), this.precoEE));
+                    ee.setValorFrete(ee.calcularFrete(ee.getPeso(), this.precoEE, ee.getPrazoEntrega()));
                     encomendasExpressas[i] = ee;
-                    System.out.println("i: " + i);
                     i++;
                 }else{
                     Encomenda en = new Encomenda();
@@ -113,14 +134,13 @@ class Transportadora implements ImportacaoArquivos{
                     en.setPeso(Float.valueOf(selecionarColuna(linha, 4)));
                     en.setValorFrete(en.calcularFrete(en.getPeso(), this.precoEN));
                     encomendasNormais[j] = en;
-                    System.out.println("j: " + j);
                     j++;
                 }
             }
         } while (linha != null);
         reader.close();
 
-        return conteudo;
+        return 0;
     }  
 
     public String selecionarColuna(String linha, int coluna){
@@ -134,7 +154,8 @@ class Transportadora implements ImportacaoArquivos{
         while (encomendasNormais[i] != null) {
             System.out.println("Número pedido: " + encomendasNormais[i].getNumPedido() + 
                                " Peso: " + encomendasNormais[i].getPeso() +
-                               " Frete: R$" + encomendasNormais[i].getValorFrete());
+                               " Frete: R$" + encomendasNormais[i].getValorFrete() + 
+                               " Data Postagem: " + encomendasNormais[i].getDataPostagem());
             i++;
         }
     }
@@ -144,7 +165,8 @@ class Transportadora implements ImportacaoArquivos{
         while (encomendasExpressas[i] != null) {
             System.out.println("Número pedido: " + encomendasExpressas[i].getNumPedido() + 
                                " Peso: " + encomendasExpressas[i].getPeso() +
-                               " Frete: R$" + encomendasExpressas[i].getValorFrete());
+                               " Frete: R$" + encomendasExpressas[i].getValorFrete() + 
+                               " Data Postagem: " + encomendasExpressas[i].getDataPostagem());
             i++;
         }
     }
